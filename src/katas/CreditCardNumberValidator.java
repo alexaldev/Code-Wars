@@ -7,16 +7,16 @@ import java.util.List;
 public class CreditCardNumberValidator {
 
     public boolean isValid(final String value) {
-        return isValid(Integer.valueOf(value));
+        return isValid(Long.valueOf(value));
     }
-    
-    public boolean isValid(final int value) {
+
+    private boolean isValid(final long value) {
 
         if (value < 0) {
             throw new IllegalArgumentException("Value must be a positive integer.");
         }
 
-        final List<Integer> valueDigits = toDigits(value);
+        final List<Long> valueDigits = toDigits(value);
         final int digitsCount = valueDigits.size();
 
         if ( digitsCount > 16) {
@@ -25,40 +25,40 @@ public class CreditCardNumberValidator {
 
         doubleEveryOtherDigit(valueDigits, isOdd(digitsCount) ? 1 : 0);
 
-        final int digitsSum = sum(valueDigits);
+        final long digitsSum = sum(valueDigits);
 
         return digitsSum % 10 == 0;
     }
 
-    private void doubleEveryOtherDigit(final List<Integer> digits, final int startingIndex) {
+    private void doubleEveryOtherDigit(final List<Long> digits, final int startingIndex) {
 
         for (int i = startingIndex; i < digits.size(); i+= 2) {
-            final int digit = digits.get(i);
-            int replaceWith = digit * 2;
-            if (replaceWith > 10) {
+            final long digit = digits.get(i);
+            long replaceWith = digit * 2;
+            if (replaceWith >= 10) {
                 replaceWith -= 9;
             }
             digits.set(i, replaceWith);
         }
     }
 
-    private int sum(final List<Integer> digits) {
+    private long sum(List<Long> digits) {
 
-        int result = 0;
-        for (Integer i : digits) {
-            result += i;
+        long result = 0;
+        for (long digit : digits) {
+            result += digit;
         }
         return result;
     }
 
-    private boolean isOdd(final int value) {
+    private boolean isOdd(final long value) {
         return (value % 2 != 0);
     }
 
-    private List<Integer> toDigits(int value) {
+    private List<Long> toDigits(long value) {
 
-        final List<Integer> result = new ArrayList<>();
-        LinkedList<Integer> stack = new LinkedList<>();
+        final List<Long> result = new ArrayList<>();
+        LinkedList<Long> stack = new LinkedList<>();
 
         while (value > 0) {
             stack.push(value % 10);
@@ -73,6 +73,7 @@ public class CreditCardNumberValidator {
     }
 
     public static void main(String[] args) {
-        System.out.println(new CreditCardNumberValidator().isValid("2626262626262626"));
+        final boolean[] flag = {(0 & 1) == 1};
+        System.out.println(new CreditCardNumberValidator().isValid("8675309"));
     }
 }
